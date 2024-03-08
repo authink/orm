@@ -4,6 +4,7 @@ package db
 import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/orm/db"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type {{.Name}} struct {
@@ -11,13 +12,13 @@ type {{.Name}} struct {
 		{{.EmbedName}}
 	{{end}}
 	{{range .Fields}}
-		{{.}} string
+		{{.}} sbd.Field
 	{{end}}
 }
 
 {{if .AtDB}}
 // Tname implements db.Table.
-func (*{{.Name}}) Tname() string {
+func (*{{.Name}}) Tname() sbd.Table {
 	return "{{.Tname}}"
 }
 

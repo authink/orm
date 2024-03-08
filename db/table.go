@@ -1,5 +1,9 @@
 package db
 
+import (
+	sbd "github.com/authink/sqlbuilder"
+)
+
 type Table interface {
-	Tname() string
+	Tname() sbd.Table
 }
