@@ -7,7 +7,6 @@ import (
 	"github.com/authink/orm/model"
 )
 
-// todo support embed struct
 func Bind(tb Table, m model.Identifier) {
 	vTable := reflect.ValueOf(tb).Elem()
 
