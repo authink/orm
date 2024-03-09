@@ -2,7 +2,7 @@
 package db
 
 import (
-	"github.com/authink/ink/src/orm/models"
+	{{range .Imports}}"{{.}}"{{end}}
 	"github.com/authink/orm/db"
 	sbd "github.com/authink/sqlbuilder"
 )

@@ -19,6 +19,7 @@ import (
 var tmpl string
 
 type dbModel struct {
+	Imports   []string
 	AtDB      bool
 	Tname     string
 	AtEmbed   bool
@@ -77,7 +78,7 @@ func outputDBModel(genDecl *ast.GenDecl, dbm *dbModel, dbPath string) {
 	writeFile(dbm, dbPath)
 }
 
-func GenByModels(mPath, dbPath string) {
+func GenByModels(mPath, dbPath string, imports []string) {
 	fset := token.NewFileSet()
 
 	pkgs, err := parser.ParseDir(fset, mPath, nil, parser.ParseComments)
@@ -95,22 +96,28 @@ func GenByModels(mPath, dbPath string) {
 						}
 
 						if strings.Contains(annotations[1].Text, "@db") {
-							var dbm dbModel
-
-							dbm.AtDB = true
-							dbm.Tname = strings.TrimPrefix(annotations[1].Text, "// @db ")
-
-							outputDBModel(genDecl, &dbm, dbPath)
+							outputDBModel(
+								genDecl,
+								&dbModel{
+									Imports: imports,
+									AtDB:    true,
+									Tname:   strings.TrimPrefix(annotations[1].Text, "// @db "),
+								},
+								dbPath,
+							)
 							continue
 						}
 
 						if strings.Contains(annotations[1].Text, "@embed") {
-							var dbm dbModel
-
-							dbm.AtEmbed = true
-							dbm.EmbedName = util.ToLowerFirstLetter(strings.TrimPrefix(annotations[1].Text, "// @embed "))
-
-							outputDBModel(genDecl, &dbm, dbPath)
+							outputDBModel(
+								genDecl,
+								&dbModel{
+									Imports:   imports,
+									AtEmbed:   true,
+									EmbedName: util.ToLowerFirstLetter(strings.TrimPrefix(annotations[1].Text, "// @embed ")),
+								},
+								dbPath,
+							)
 							continue
 						}
 					}
